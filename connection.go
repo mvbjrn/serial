@@ -49,9 +49,9 @@ const (
 type StopBit byte
 
 const (
-	// StopBit1 represents a single bit being send as StopBit.
+	// StopBit1 represents a single bit being send as stopbit.
 	StopBit1 = StopBit(iota + 1)
-	// StopBit2 represents two bits being send as StopBit.
+	// StopBit2 represents two bits being send as stopbit.
 	StopBit2
 )
 
