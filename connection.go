@@ -144,8 +144,8 @@ func Init(port string, baudrate Baud, databit DataBit, stopbit StopBit, parity P
 	return connection, connection.check()
 }
 
-// LoadFile provides a connection with the parameters being loaded from a json file.
-func LoadFile(path string) (*Connection, error) {
+// Load provides a connection with the parameters being loaded from a json file.
+func Load(path string) (*Connection, error) {
 	var connection *Connection
 
 	file, err := os.Open(path)
