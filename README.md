@@ -1,7 +1,10 @@
 # serial
 
-An extended package for accessing the serial port.
-It is inspired by https://github.com/tarm/serial.
+This is an extended package for accessing the serial port.
+It is inspired by https://github.com/tarm/serial and several forks.
+
+I made this library mainly for educational purposes.
+As you can see, I commented my code alot, just to make myself clear what is happening.
 
 ## Overview
 
@@ -10,6 +13,10 @@ It is inspired by https://github.com/tarm/serial.
 * Terminal
 
 ## Library
+
+The connection struct is all you need. It encapsulates all paramaters necessary
+and all functions needed to interact with a serial device. Just initiate a connection and open it.
+After that your are able to read and write from it. When you are finished, just close it.
 
 ### Possible Errors
 
