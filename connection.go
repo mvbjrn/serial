@@ -5,6 +5,7 @@ package serial
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"os"
 )
@@ -87,6 +88,7 @@ type Connection struct {
 	StopBit StopBit
 	Parity  Parity
 	f       *os.File
+	open    bool
 }
 
 func (connection *Connection) check() error {
@@ -116,6 +118,22 @@ func (connection *Connection) check() error {
 	}
 
 	return nil
+}
+
+func (connection *Connection) String() string {
+
+	var parity string
+	switch connection.Parity {
+	case ParityNone:
+		parity = "N"
+	case ParityEven:
+		parity = "E"
+	case ParityOdd:
+		parity = "O"
+	}
+
+	return fmt.Sprintf("port: %s, baud rate:%d, parameters: %d%s%d",
+		connection.Port, connection.Baud, connection.DataBit, parity, connection.StopBit)
 }
 
 // functions
