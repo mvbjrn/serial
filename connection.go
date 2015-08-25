@@ -71,10 +71,10 @@ const (
 
 // var
 var (
-	errBaud    = errors.New("serial configuration error: bad baud rate (4800, 9600, 19200, 38400, 57600, 115200)")
-	errDataBit = errors.New("serial configuration error: bad number of data bits (5, 6, 7, 8, 9)")
-	errStopBit = errors.New("serial configuration error: bad number of stop bits (1, 2)")
-	errParity  = errors.New("serial configuration error: bad parity (0 - None, 1 - Even, 2 - Odd)")
+	errBaud    = errors.New("serial configuration error: invalid baud rate (4800, 9600, 19200, 38400, 57600, 115200)")
+	errDataBit = errors.New("serial configuration error: invalid number of data bits (5, 6, 7, 8, 9)")
+	errStopBit = errors.New("serial configuration error: invalid number of stop bits (1, 2)")
+	errParity  = errors.New("serial configuration error: invalid parity (0 - None, 1 - Even, 2 - Odd)")
 )
 
 // structs and its functions
