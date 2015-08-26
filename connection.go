@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 )
 
 // const
@@ -70,6 +71,7 @@ const (
 
 // var
 var (
+	errPort    = errors.New("serial configuration error: invalid port")
 	errBaud    = errors.New("serial configuration error: invalid baud rate (4800, 9600, 19200, 38400, 57600, 115200)")
 	errDataBit = errors.New("serial configuration error: invalid number of data bits (5, 6, 7, 8, 9)")
 	errStopBit = errors.New("serial configuration error: invalid number of stop bits (1, 2)")
@@ -90,6 +92,13 @@ type Connection struct {
 }
 
 func (connection *Connection) check() error {
+
+	switch runtime.GOOS {
+	case "windows":
+		//TODO Port should look like this: COM3, USB0
+	case "freebsd", "linux":
+		//TODO Port should look like this: /dev/ttyUSB0
+	}
 
 	switch connection.Baud {
 	case Baud115200, Baud57600, Baud38400, Baud19200, Baud9600, Baud4800:

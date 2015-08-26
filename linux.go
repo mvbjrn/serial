@@ -1,6 +1,6 @@
 // licence goes here
 
-// +build linux,!cgo
+// +build linux, !cgo
 
 package serial
 
@@ -52,10 +52,10 @@ func (connection *Connection) Open() error {
 		}
 	}()
 
-	// Create a termios with the given parameters.
+	// Create a plain termios, which allows the program to execute input/output operations.
 	t := syscall.Termios{}
 
-	// Setup the baud rate.
+	// Setup the baud rate in the termios structure.
 	baudrate, err := baudrates[connection.Baud]
 	if err != nil {
 		return errBaud
@@ -65,7 +65,7 @@ func (connection *Connection) Open() error {
 	t.Ispeed = baudrate
 	t.Ospeed = baudrate
 
-	// Setup stop bits.
+	// Setup stop bits in the termios structure.
 	switch connection.StopBit {
 	case StopBits1:
 		t.Cflag &^= syscall.CSTOPB // CSTOPB = 0x40
@@ -75,14 +75,14 @@ func (connection *Connection) Open() error {
 		return errStopBit
 	}
 
-	// Setup data bits.
+	// Setup data bits in the termios structure.
 	databit, err := databits[connection.DataBit]
 	if err != nil {
 		return errDataBit
 	}
 	t.Cflag |= databit
 
-	// Setup parity.
+	// Setup parity in the termios structure.
 	switch connection.Parity {
 	case ParityNone:
 		t.Cflag &^= syscall.PARENB // PARENB = 0x100
@@ -95,7 +95,7 @@ func (connection *Connection) Open() error {
 		return errParity
 	}
 
-	// Execute IOCTL with the modified termios structure to apply changes.
+	// Execute IOCTL with the modified termios structure to apply the changes.
 	if _, _, errno := syscall.Syscall6(
 		syscall.SYS_IOCTL,           // device-specific input/output operations
 		uintptr(connection.f.Fd()),  // open file descriptor
@@ -137,7 +137,7 @@ func (connection *Connection) Flush() error {
 		_, _, err := syscall.Syscall(
 			syscall.SYS_IOCTL,          // device-specific input/output operations
 			uintptr(connection.f.Fd()), // open file descriptor
-			uintptr(syscall.TCIOFLUSH), // a request code number to flush input output
+			uintptr(syscall.TCIOFLUSH), // a request code number to flush input/output
 			uintptr(nil),               // a pointer to data, not needed here
 		)
 		return err
