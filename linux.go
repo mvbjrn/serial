@@ -52,9 +52,6 @@ func (connection *Connection) Open() error {
 		}
 	}()
 
-	// Create a file descriptor.
-	fd := connection.f.Fd()
-
 	// Create a termios with the given parameters.
 	t := syscall.Termios{}
 
@@ -98,12 +95,12 @@ func (connection *Connection) Open() error {
 		return errParity
 	}
 
-	// Execute TCSETS with the modified termios structure to apply changes.
+	// Execute IOCTL with the modified termios structure to apply changes.
 	if _, _, errno := syscall.Syscall6(
-		syscall.SYS_IOCTL,
-		uintptr(fd),
-		uintptr(syscall.TCSETS),
-		uintptr(unsafe.Pointer(&t)),
+		syscall.SYS_IOCTL,           // device-specific input/output operations
+		uintptr(connection.f.Fd()),  // open file descriptor
+		uintptr(syscall.TCSETS),     // a request code number
+		uintptr(unsafe.Pointer(&t)), // a pointer to the termios structure
 		0,
 		0,
 		0,
@@ -132,6 +129,20 @@ func (connection *Connection) Read(delimter byte) ([]byte, error) {
 	}
 
 	return _, errConnOpen
+}
+
+// Flush the connection, which causes untransmitted or not read data to be discarded.
+func (connection *Connection) Flush() error {
+	if connection.open {
+		_, _, err := syscall.Syscall(
+			syscall.SYS_IOCTL,          // device-specific input/output operations
+			uintptr(connection.f.Fd()), // open file descriptor
+			uintptr(syscall.TCIOFLUSH), // a request code number to flush input output
+			uintptr(nil),               // a pointer to data, not needed here
+		)
+		return err
+	}
+	return errConnOpen
 }
 
 // Close a connection.
