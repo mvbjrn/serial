@@ -99,7 +99,7 @@ func (connection *Connection) Open() error {
 	if _, _, errno := syscall.Syscall6(
 		syscall.SYS_IOCTL,           // device-specific input/output operations
 		uintptr(connection.f.Fd()),  // open file descriptor
-		uintptr(syscall.TCSETS),     // a request code number
+		uintptr(syscall.TCSETS),     // a request code number to set the current serial port settings
 		uintptr(unsafe.Pointer(&t)), // a pointer to the termios structure
 		0,
 		0,
