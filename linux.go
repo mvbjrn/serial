@@ -38,6 +38,10 @@ func (connection *Connection) Open() error {
 		}
 	}()
 
+	// Create a file descriptor and a termios.
+	fd := connection.f.Fd()
+	t := syscall.Termios{}
+
 	connection.open = true
 	return nil
 }
