@@ -31,6 +31,13 @@ func (connection *Connection) Open() error {
 		return err
 	}
 
+	// Close the file on error occurrence.
+	defer func() {
+		if err != nil && f != nil {
+			f.Close()
+		}
+	}()
+
 	connection.open = true
 	return nil
 }
