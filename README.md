@@ -6,6 +6,8 @@ It is inspired by https://github.com/tarm/serial and several forks.
 I made this library mainly for educational purposes.
 As you can see, I commented my code alot, just to make myself clear what is happening.
 
+**This package is currently untested.**
+
 ## Overview
 
 * Library
