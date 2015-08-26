@@ -13,6 +13,14 @@ import (
 
 var (
 	errConnOpen = errors.New("serial connection error: connection is not open")
+	bauds       = map[int]uint32{
+		4800:   syscall.B4800,
+		9600:   syscall.B9600,
+		19200:  syscall.B19200,
+		38400:  syscall.B38400,
+		57600:  syscall.B57600,
+		115200: syscall.B115200,
+	}
 )
 
 // structs and its functions

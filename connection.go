@@ -42,8 +42,6 @@ const (
 	DataBit7
 	// DataBit8 stands for a character length of eight bits.
 	DataBit8
-	// DataBit9 stands for a character length of nine bits.
-	DataBit9
 )
 
 // StopBit is the number of bits being send at the end of every character.
@@ -100,7 +98,7 @@ func (connection *Connection) check() error {
 	}
 
 	switch connection.DataBit {
-	case DataBit5, DataBit6, DataBit7, DataBit8, DataBit9:
+	case DataBit5, DataBit6, DataBit7, DataBit8:
 	default:
 		return errDataBit
 	}
