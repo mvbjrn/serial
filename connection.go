@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"runtime"
 )
 
 // const
@@ -92,13 +91,6 @@ type Connection struct {
 }
 
 func (connection *Connection) check() error {
-
-	switch runtime.GOOS {
-	case "windows":
-		//TODO Port should look like this: COM3, USB0
-	case "freebsd", "linux":
-		//TODO Port should look like this: /dev/ttyUSB0
-	}
 
 	switch connection.Baud {
 	case Baud115200, Baud57600, Baud38400, Baud19200, Baud9600, Baud4800:
