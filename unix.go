@@ -1,6 +1,6 @@
 // licence goes here
 
-// +build linux, !cgo
+// +build linux, freebsd, !cgo
 
 package serial
 
