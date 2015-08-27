@@ -16,9 +16,38 @@ As you can see, I commented my code alot, just to make myself clear what is happ
 
 ## Library
 
-The connection struct is all you need. It encapsulates all paramaters necessary
+The connection struct is all you need. It encapsulates all parameters necessary
 and all functions needed to interact with a serial device. Just initiate a connection and open it.
-After that your are able to read and write from it. When you are finished, just close it.
+After that your are able to read and write from it or to flush the I/O. When you are finished, just close it.
+
+A connection can be initiated by setting all parameters within the code or by loading all parameters from a file.
+The library provides several consts to set the baud rate, data and stop bits as well as the parity.
+
+Using the Init function:
+`connection, err := serial.InitConnection("/dev/ttyUSB0", serial.Baud115200, serial.DataBit8, serial.StopBit1, serial.ParityNone)`
+
+Loading from a file:
+`connection, err := serial.LoadConnection("sample/sample.json")`
+
+The next step is to open the connection:
+`err := connection.Open()`
+This simply sets up the underlying file and binds the desired parameters to it.
+
+Writing to the serial port is done by just calling the write function:
+`n, err := connection.Write([]byte("WriteToPort"))`
+This returns the count of transmitted bytes as well as the error.
+
+Reading from the serial port requires a delimiter, which indicates the end of the transmission:
+`response, err := connection.Read(10)`
+The delimiter is device dependent. Using an ASCII table to find the correct decimal value may help at this point.
+The response is a `[]byte`, which contains all data transmitted until the delimiter is reached.
+
+After finishing reading and writing, the connection can be flushed and closed:
+`err := connection.Flush()`
+This causes the I/O to discard untransmitted and unread data.
+
+`err := connection.Close()`
+This causes the connection to be closed.
 
 ### Possible Errors
 
