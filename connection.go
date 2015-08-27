@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"runtime"
 )
@@ -171,4 +172,18 @@ func Load(path string) (*Connection, error) {
 	}
 
 	return connection, connection.check()
+}
+
+// Save a connection to a json file.
+func (connection *Connection) Save(path string) error {
+	json, err := json.Marshal(connection)
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile(path, json, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
