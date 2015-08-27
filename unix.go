@@ -54,48 +54,48 @@ func (connection *Connection) Open() error {
 	}()
 
 	// Create a plain termios, which allows the program to execute input/output operations.
-	t := syscall.Termios{}
+	termios := syscall.Termios{}
 
 	// Setup the baud rate in the termios structure.
 	baudrate := baudrates[connection.Baud]
 
-	t.Cflag |= baudrate
-	t.Ispeed = baudrate
-	t.Ospeed = baudrate
+	termios.Cflag |= baudrate
+	termios.Ispeed = baudrate
+	termios.Ospeed = baudrate
 
 	// Setup stop bits in the termios structure.
 	switch connection.StopBit {
 	case StopBit1:
-		t.Cflag &^= syscall.CSTOPB // CSTOPB = 0x40
+		termios.Cflag &^= syscall.CSTOPB // CSTOPB = 0x40
 	case StopBit2:
-		t.Cflag |= syscall.CSTOPB
+		termios.Cflag |= syscall.CSTOPB
 	default:
 		return errStopBit
 	}
 
 	// Setup data bits in the termios structure.
 	databit := databits[connection.DataBit]
-	t.Cflag |= databit
+	termios.Cflag |= databit
 
 	// Setup parity in the termios structure.
 	switch connection.Parity {
 	case ParityNone:
-		t.Cflag &^= syscall.PARENB // PARENB = 0x100
+		termios.Cflag &^= syscall.PARENB // PARENB = 0x100
 	case ParityEven:
-		t.Cflag |= syscall.PARENB
+		termios.Cflag |= syscall.PARENB
 	case ParityOdd:
-		t.Cflag |= syscall.PARENB
-		t.Cflag |= syscall.PARODD // PARODD = 0x200
+		termios.Cflag |= syscall.PARENB
+		termios.Cflag |= syscall.PARODD // PARODD = 0x200
 	default:
 		return errParity
 	}
 
 	// Execute IOCTL with the modified termios structure to apply the changes.
 	if _, _, errno := syscall.Syscall6(
-		syscall.SYS_IOCTL,           // device-specific input/output operations
-		uintptr(connection.f.Fd()),  // open file descriptor
-		uintptr(syscall.TCSETS),     // a request code number to set the current serial port settings
-		uintptr(unsafe.Pointer(&t)), // a pointer to the termios structure
+		syscall.SYS_IOCTL,                 // device-specific input/output operations
+		uintptr(connection.f.Fd()),        // open file descriptor
+		uintptr(syscall.TCSETS),           // a request code number to set the current serial port settings
+		uintptr(unsafe.Pointer(&termios)), // a pointer to the termios structure
 		0,
 		0,
 		0,
