@@ -1,6 +1,6 @@
 // licence goes here
 
-// +build linux, freebsd, !cgo
+// +build linux, !cgo
 
 package serial
 
@@ -35,6 +35,8 @@ var (
 // Open a connection.
 func (connection *Connection) Open() error {
 
+	var err error
+
 	// The serial port is basically a file we are writing to and reading from.
 	// 	O_RDWR allows the program to read and write the file.
 	// 	O_NOCTTY prevents the device from controlling the terminal.
@@ -46,9 +48,8 @@ func (connection *Connection) Open() error {
 
 	// Close the file on error occurrence.
 	defer func() {
-		if err != nil && f != nil {
-			f.Close()
-			return err
+		if err != nil && connection.f != nil {
+			connection.f.Close()
 		}
 	}()
 
@@ -56,10 +57,7 @@ func (connection *Connection) Open() error {
 	t := syscall.Termios{}
 
 	// Setup the baud rate in the termios structure.
-	baudrate, err := baudrates[connection.Baud]
-	if err != nil {
-		return errBaud
-	}
+	baudrate := baudrates[connection.Baud]
 
 	t.Cflag |= baudrate
 	t.Ispeed = baudrate
@@ -67,19 +65,16 @@ func (connection *Connection) Open() error {
 
 	// Setup stop bits in the termios structure.
 	switch connection.StopBit {
-	case StopBits1:
+	case StopBit1:
 		t.Cflag &^= syscall.CSTOPB // CSTOPB = 0x40
-	case StopBits2:
+	case StopBit2:
 		t.Cflag |= syscall.CSTOPB
 	default:
 		return errStopBit
 	}
 
 	// Setup data bits in the termios structure.
-	databit, err := databits[connection.DataBit]
-	if err != nil {
-		return errDataBit
-	}
+	databit := databits[connection.DataBit]
 	t.Cflag |= databit
 
 	// Setup parity in the termios structure.
@@ -105,7 +100,7 @@ func (connection *Connection) Open() error {
 		0,
 		0,
 	); errno != 0 {
-		return nil, errno
+		return errno
 	}
 
 	connection.open = true
@@ -118,17 +113,17 @@ func (connection *Connection) Write(b []byte) (int, error) {
 		return connection.f.Write(b)
 	}
 
-	return _, errConnOpen
+	return 0, errConnOpen
 }
 
 // Read from an open connection until the delimter is reached.
-func (connection *Connection) Read(delimter byte) ([]byte, error) {
+func (connection *Connection) Read(delimiter byte) ([]byte, error) {
 	if connection.open {
 		reader := bufio.NewReader(connection.f)
 		return reader.ReadBytes(delimiter)
 	}
 
-	return _, errConnOpen
+	return nil, errConnOpen
 }
 
 // Flush the connection, which causes untransmitted or not read data to be discarded.
@@ -138,7 +133,7 @@ func (connection *Connection) Flush() error {
 			syscall.SYS_IOCTL,          // device-specific input/output operations
 			uintptr(connection.f.Fd()), // open file descriptor
 			uintptr(syscall.TCIOFLUSH), // a request code number to flush input/output
-			uintptr(nil),               // a pointer to data, not needed here
+			uintptr(0),                 // a pointer to data, not needed here
 		)
 		return err
 	}
