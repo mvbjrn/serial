@@ -126,6 +126,17 @@ func (connection *Connection) Read(delimiter byte) ([]byte, error) {
 	return nil, errConnOpen
 }
 
+// ReadToBuffer reads from an open connection into a []byte buffer with the given size.
+func (connection *Connection) ReadToBuffer(size int) ([]byte, error) {
+	buffer := make([]byte, size)
+	n, err = connection.f.Read(buffer)
+	if err != nil {
+		return nil, err
+	}
+
+	return buffer, nil
+}
+
 // Flush the connection, which causes untransmitted or not read data to be discarded.
 func (connection *Connection) Flush() error {
 	if connection.isOpen {
