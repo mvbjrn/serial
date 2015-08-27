@@ -128,6 +128,20 @@ func (connection *Connection) check() error {
 	return nil
 }
 
+// Save a connection to a json file.
+func (connection *Connection) Save(path string) error {
+	json, err := json.Marshal(connection)
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile(path, json, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (connection *Connection) String() string {
 
 	var parity string
@@ -146,14 +160,14 @@ func (connection *Connection) String() string {
 
 // functions
 
-// Init provides a connection with the given parameters.
-func Init(port string, baudrate Baud, databit DataBit, stopbit StopBit, parity Parity) (*Connection, error) {
+// InitConnection provides a connection with the given parameters.
+func InitConnection(port string, baudrate Baud, databit DataBit, stopbit StopBit, parity Parity) (*Connection, error) {
 	connection := &Connection{Port: port, Baud: baudrate, DataBit: databit, StopBit: stopbit, Parity: parity}
 	return connection, connection.check()
 }
 
-// Load provides a connection with the parameters being loaded from a json file.
-func Load(path string) (*Connection, error) {
+// LoadConnection provides a connection with the parameters being loaded from a json file.
+func LoadConnection(path string) (*Connection, error) {
 	var connection *Connection
 
 	file, err := os.Open(path)
@@ -172,18 +186,4 @@ func Load(path string) (*Connection, error) {
 	}
 
 	return connection, connection.check()
-}
-
-// Save a connection to a json file.
-func (connection *Connection) Save(path string) error {
-	json, err := json.Marshal(connection)
-	if err != nil {
-		return err
-	}
-	err = ioutil.WriteFile(path, json, 0644)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
