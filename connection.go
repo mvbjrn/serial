@@ -89,7 +89,7 @@ type Connection struct {
 	StopBit StopBit
 	Parity  Parity
 	f       *os.File
-	open    bool
+	isOpen  bool
 }
 
 func (connection *Connection) check() error {

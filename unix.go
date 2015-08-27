@@ -103,13 +103,13 @@ func (connection *Connection) Open() error {
 		return errno
 	}
 
-	connection.open = true
+	connection.isOpen = true
 	return nil
 }
 
 // Write a byte array to an open connection.
 func (connection *Connection) Write(b []byte) (int, error) {
-	if connection.open {
+	if connection.isOpen {
 		return connection.f.Write(b)
 	}
 
@@ -118,7 +118,7 @@ func (connection *Connection) Write(b []byte) (int, error) {
 
 // Read from an open connection until the delimter is reached.
 func (connection *Connection) Read(delimiter byte) ([]byte, error) {
-	if connection.open {
+	if connection.isOpen {
 		reader := bufio.NewReader(connection.f)
 		return reader.ReadBytes(delimiter)
 	}
@@ -128,7 +128,7 @@ func (connection *Connection) Read(delimiter byte) ([]byte, error) {
 
 // Flush the connection, which causes untransmitted or not read data to be discarded.
 func (connection *Connection) Flush() error {
-	if connection.open {
+	if connection.isOpen {
 		_, _, err := syscall.Syscall(
 			syscall.SYS_IOCTL,          // device-specific input/output operations
 			uintptr(connection.f.Fd()), // open file descriptor
@@ -143,7 +143,7 @@ func (connection *Connection) Flush() error {
 // Close a connection.
 func (connection *Connection) Close() error {
 	err := connection.f.Close()
-	connection.open = false
+	connection.isOpen = false
 
 	return err
 }
