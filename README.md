@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/r00ky/serial.svg?branch=master)](https://travis-ci.org/r00ky/serial)
+[![GoDoc](https://godoc.org/github.com/r00ky/serial?status.svg)](https://godoc.org/github.com/r00ky/serial)
+
 # serial
 
 This is an extended package for accessing the serial port.
