@@ -21,7 +21,7 @@ var (
 
 func TestSave(t *testing.T) {
 	t.Skip("skipping test.")
-	connection, err := Init("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
+	connection, err := InitConnection("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
 	if err != nil {
 		t.Error(err)
 	}
@@ -41,7 +41,7 @@ func TestSave(t *testing.T) {
 
 func TestLoad(t *testing.T) {
 	t.Skip("skipping test.")
-	connection1, err := Init("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
+	connection1, err := InitConnection("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
 	if err != nil {
 		t.Error(err)
 	}
@@ -58,7 +58,7 @@ func TestLoad(t *testing.T) {
 		}
 	}()
 
-	connection2, err := Load(sample)
+	connection2, err := LoadConnection(sample)
 	if err != nil {
 		t.Error(err)
 	}
