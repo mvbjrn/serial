@@ -1,4 +1,6 @@
-// licence goes here
+// Copyright 2015 mvbjrn. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
 
 // +build !windows !cgo
 // +build 386 amd64 arm
