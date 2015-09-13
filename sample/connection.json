@@ -1,1 +1,8 @@
-{"Port":"/dev/ttyUSB0","Baud":115200,"DataBit":8,"StopBit":1,"Parity":0}
+{
+  "Information":"This is a sample file representing a serial.Connection.",
+  "Port":"/dev/ttyUSB0",
+  "Baud":115200,
+  "DataBit":8,
+  "StopBit":1,
+  "Parity":0
+}
