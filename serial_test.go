@@ -20,6 +20,7 @@ var (
 // functions
 
 func TestSave(t *testing.T) {
+	t.Skip()
 	connection, err := InitConnection("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
 	if err != nil {
 		t.Error(err)
