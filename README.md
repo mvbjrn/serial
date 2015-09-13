@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.org/r00ky/serial.svg?branch=master)](https://travis-ci.org/r00ky/serial)
-[![Coverage](http://gocover.io/_badge/github.com/r00ky/serial)](http://gocover.io/github.com/r00ky/serial)
-[![GoDoc](https://godoc.org/github.com/r00ky/serial?status.svg)](https://godoc.org/github.com/r00ky/serial)
+[![Build Status](https://travis-ci.org/mvbjrn/serial.svg?branch=master)](https://travis-ci.org/mvbjrn/serial)
+[![Coverage](http://gocover.io/_badge/github.com/mvbjrn/serial)](http://gocover.io/github.com/mvbjrn/serial)
+[![GoDoc](https://godoc.org/github.com/mvbjrn/serial?status.svg)](https://godoc.org/github.com/mvbjrn/serial)
 
 # serial
 
