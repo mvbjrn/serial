@@ -6,6 +6,7 @@ import "testing"
 
 // TODO: documentation
 func TestConnection(t *testing.T) {
+	t.Skip()
 	connection1, err := InitConnection("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
 	if err != nil {
 		t.Fatal(err)
