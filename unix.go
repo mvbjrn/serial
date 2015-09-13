@@ -1,6 +1,7 @@
 // licence goes here
 
-// +build !windows, cgo
+// +build !windows !cgo
+// +build 386 amd64 arm
 
 package serial
 
@@ -167,9 +168,10 @@ func (connection *Connection) Open() error {
 
 	// Execute IOCTL with the modified termios structure to apply the changes.
 	if _, _, errno := syscall.Syscall6(
-		syscall.SYS_IOCTL,                 // device-specific input/output operations
-		uintptr(connection.f.Fd()),        // open file descriptor
-		uintptr(syscall.TCSETS),           // a request code number to set the current serial port settings
+		syscall.SYS_IOCTL,          // device-specific input/output operations
+		uintptr(connection.f.Fd()), // open file descriptor
+		uintptr(syscall.TCSETS),    // a request code number to set the current serial port settings
+		//TODO: it looks like syscall.TCSETS is not available under freebsd and darwin. Is this a bug?
 		uintptr(unsafe.Pointer(&termios)), // a pointer to the termios structure
 		0,
 		0,
