@@ -1,12 +1,15 @@
 // licence goes here
 
-// +build linux, !cgo
+// +build !windows, cgo
 
 package serial
 
 import (
 	"bufio"
+	"encoding/json"
 	"errors"
+	"fmt"
+	"io/ioutil"
 	"os"
 	"syscall"
 	"unsafe"
@@ -31,6 +34,78 @@ var (
 )
 
 // structs and its functions
+
+// Connection represents a serial connection with all parameters.
+type Connection struct {
+	Port    string
+	Baud    Baud
+	DataBit DataBit
+	StopBit StopBit
+	Parity  Parity
+	f       *os.File
+	isOpen  bool
+}
+
+func (connection *Connection) check() error {
+
+	//TODO Port should look like this: /dev/ttyUSB0
+
+	switch connection.Baud {
+	case Baud115200, Baud57600, Baud38400, Baud19200, Baud9600, Baud4800:
+	default:
+		return errBaud
+	}
+
+	switch connection.DataBit {
+	case DataBit5, DataBit6, DataBit7, DataBit8:
+	default:
+		return errDataBit
+	}
+
+	switch connection.StopBit {
+	case StopBit1, StopBit2:
+	default:
+		return errStopBit
+	}
+
+	switch connection.Parity {
+	case ParityNone, ParityEven, ParityOdd:
+	default:
+		return errParity
+	}
+
+	return nil
+}
+
+// Save a connection to a json file.
+func (connection *Connection) Save(path string) error {
+	json, err := json.Marshal(connection)
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile(path, json, 0644)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (connection *Connection) String() string {
+
+	var parity string
+	switch connection.Parity {
+	case ParityNone:
+		parity = "N"
+	case ParityEven:
+		parity = "E"
+	case ParityOdd:
+		parity = "O"
+	}
+
+	return fmt.Sprintf("port: %s, baud rate:%d, parameters: %d%s%d",
+		connection.Port, connection.Baud, connection.DataBit, parity, connection.StopBit)
+}
 
 // Open a connection.
 func (connection *Connection) Open() error {
@@ -129,7 +204,8 @@ func (connection *Connection) Read(delimiter byte) ([]byte, error) {
 // ReadToBuffer reads from an open connection into a []byte buffer with the given size.
 func (connection *Connection) ReadToBuffer(size int) ([]byte, error) {
 	buffer := make([]byte, size)
-	n, err = connection.f.Read(buffer)
+	//TODO do something with bytes read
+	_, err := connection.f.Read(buffer)
 	if err != nil {
 		return nil, err
 	}
@@ -157,4 +233,9 @@ func (connection *Connection) Close() error {
 	connection.isOpen = false
 
 	return err
+}
+
+func createConnection(port string, baudrate Baud, databit DataBit, stopbit StopBit, parity Parity) (*Connection, error) {
+	connection := &Connection{Port: port, Baud: baudrate, DataBit: databit, StopBit: stopbit, Parity: parity}
+	return connection, connection.check()
 }
