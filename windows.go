@@ -96,7 +96,7 @@ func (connection *Connection) String() string {
 }
 
 // Open a connection.
-func (connection *Connection) Open() error {
+func (connection *Connection) Open(timeout uint8) error {
 	//TODO
 }
 
