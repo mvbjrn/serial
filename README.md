@@ -39,9 +39,9 @@ Loading from a file:
 
 The next step is to open the connection:
 
-`err := connection.Open()`
+`err := connection.Open(0)`
 
-This simply sets up the underlying file and binds the desired parameters to it.
+This simply sets up the underlying file and binds the desired parameters to it. The 0 is indicating that no timeout is being used. The file is blocking until at least one byte is received.
 
 Writing to the serial port is done by just calling the write function:
 
