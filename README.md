@@ -10,6 +10,8 @@ It is inspired by https://github.com/tarm/serial and several forks.
 I made this library mainly for educational purposes.
 As you can see, I commented my code a lot, just to make myself clear what is happening.
 
+Additionally, I will try to collect useful information in the [repo-wiki](https://github.com/mvbjrn/serial/wiki)
+
 **This package is currently untested.**
 
 ## Overview
