@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"regexp"
 )
 
 var ()
@@ -30,7 +31,10 @@ type Connection struct {
 
 func (connection *Connection) check() error {
 
-	//TODO Port should look like this: COM3
+	match, _ := regexp.MatchString(".*COM.*", connection.Port)
+	if !match {
+		return errPort
+	}
 
 	switch connection.Baud {
 	case Baud115200, Baud57600, Baud38400, Baud19200, Baud9600, Baud4800:
