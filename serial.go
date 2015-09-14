@@ -67,8 +67,6 @@ const (
 	ParityOdd
 )
 
-// TODO flow control
-
 // var
 var (
 	errPort     = errors.New("serial configuration error: invalid port (unix: /dev/tty* , windows: COM*)")
