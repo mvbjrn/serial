@@ -6,7 +6,7 @@ package serial
 
 import "testing"
 
-// TODO: documentation
+// TestConnection is part of a loopback test. Additional information is provided in the repo-wiki.
 func TestConnection(t *testing.T) {
 	t.Skip()
 	connection1, err := InitConnection("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
