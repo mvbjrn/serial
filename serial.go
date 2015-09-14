@@ -71,7 +71,7 @@ const (
 
 // var
 var (
-	errPort     = errors.New("serial configuration error: invalid port")
+	errPort     = errors.New("serial configuration error: invalid port (unix: /dev/tty* , windows: COM*)")
 	errBaud     = errors.New("serial configuration error: invalid baud rate (4800, 9600, 19200, 38400, 57600, 115200)")
 	errDataBit  = errors.New("serial configuration error: invalid number of data bits (5, 6, 7, 8, 9)")
 	errStopBit  = errors.New("serial configuration error: invalid number of stop bits (1, 2)")

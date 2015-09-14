@@ -118,6 +118,9 @@ func (connection *Connection) Close() error {
 	//TODO
 }
 
+// functions
+
+// createConnection is the entrence point for the Connection in windows.
 func createConnection(port string, baudrate Baud, databit DataBit, stopbit StopBit, parity Parity) (*Connection, error) {
 	connection := &Connection{Port: port, Baud: baudrate, DataBit: databit, StopBit: stopbit, Parity: parity}
 	return connection, connection.check()
