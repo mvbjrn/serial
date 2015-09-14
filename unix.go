@@ -10,7 +10,6 @@ package serial
 import (
 	"bufio"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -19,8 +18,7 @@ import (
 )
 
 var (
-	errConnOpen = errors.New("serial connection error: connection is not open")
-	baudrates   = map[Baud]uint32{
+	baudrates = map[Baud]uint32{
 		Baud4800:   syscall.B4800,
 		Baud9600:   syscall.B9600,
 		Baud19200:  syscall.B19200,
