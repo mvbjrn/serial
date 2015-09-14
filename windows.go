@@ -16,6 +16,8 @@ import (
 
 var ()
 
+// TODO flow control
+
 // structs and its functions
 
 // Connection represents a serial connection with all parameters.
