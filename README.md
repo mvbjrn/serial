@@ -66,7 +66,7 @@ After finishing reading and writing, the connection can be flushed and closed:
 
 `err := connection.Flush()`
 
-This causes the I/O to discard untransmitted and unread data.
+This causes the I/O to discard not transmitted and unread data.
 
 `err := connection.Close()`
 
