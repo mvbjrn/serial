@@ -20,12 +20,12 @@ func TestConnection(t *testing.T) {
 	}
 
 	//s1, err := OpenPort(c0)
-	err = connection1.Open()
+	err = connection1.Open(0)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	err = connection2.Open()
+	err = connection2.Open(0)
 	if err != nil {
 		t.Fatal(err)
 	}
