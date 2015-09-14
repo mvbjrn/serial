@@ -103,7 +103,7 @@ func (connection *Connection) Write(b []byte) (int, error) {
 	//TODO
 }
 
-// Read from an open connection until the delimter is reached.
+// Read from an open connection until the delimiter is reached.
 func (connection *Connection) Read(delimiter byte) ([]byte, error) {
 	//TODO
 }
