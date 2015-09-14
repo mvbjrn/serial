@@ -35,7 +35,7 @@ Using the Init function:
 
 Loading from a file:
 
-`connection, err := serial.LoadConnection("sample/sample.json")`
+`connection, err := serial.LoadConnection("sample/connection.json")`
 
 The next step is to open the connection:
 
