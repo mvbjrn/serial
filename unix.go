@@ -15,7 +15,6 @@ import (
 	"os"
 	"regexp"
 	"syscall"
-	"time"
 	"unsafe"
 )
 
@@ -116,7 +115,7 @@ func (connection *Connection) String() string {
 }
 
 // Open a connection with a read timeout.
-func (connection *Connection) Open(timeout time.Duration) error {
+func (connection *Connection) Open(timeout uint8) error {
 
 	var err error
 
@@ -173,11 +172,16 @@ func (connection *Connection) Open(timeout time.Duration) error {
 		return errParity
 	}
 
-	// Calculate timeout and attach it to the termios structure.
-	vmin, vtime := calculateTimeout(timeout)
+	// // set blocking / non-blocking read
+	vmin := uint8(0)
+	if timeout == 0 {
+		vmin = 1
+	}
+
+	// Attach min bytes and timeout to the termios structure.
 	termios.Cc = [32]uint8{
-		syscall.VMIN:  vmin,  // min bytes per transfer
-		syscall.VTIME: vtime, // actual read timeout in deciseconds
+		syscall.VMIN:  vmin,    // min bytes per transfer
+		syscall.VTIME: timeout, // actual read timeout in deciseconds
 	}
 
 	// Execute IOCTL with the modified termios structure to apply the changes.
@@ -252,27 +256,6 @@ func (connection *Connection) Close() error {
 }
 
 // functions
-
-func calculateTimeout(timeout time.Duration) (uint8, uint8) {
-	// calculate deciseconds from duration
-	vtime := timeout.Seconds() / 10
-
-	// Cap size of vtime (uint8 max value is 255)
-	const MAXUINT8 = 1<<8 - 1 // 255
-	if vtime < 1 {
-		// 0.1s
-		vtime = 1
-	} else if vtime > MAXUINT8 {
-		// 25.5s
-		vtime = MAXUINT8
-	}
-
-	vmin := uint8(0)
-	if timeout == 0 {
-		vmin = 1
-	}
-	return vmin, uint8(vtime)
-}
 
 // createConnection is the entrence point for the Connection in unix-like operating systems.
 func createConnection(port string, baudrate Baud, databit DataBit, stopbit StopBit, parity Parity) (*Connection, error) {
