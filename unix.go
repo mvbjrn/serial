@@ -251,9 +251,12 @@ func (connection *Connection) Query(request []byte, delimiter byte) ([]byte, err
 	if connection.isOpen {
 
 		// write
-		_, err := connection.Write(request)
+		n, err := connection.Write(request)
 		if err != nil {
 			return nil, err
+		}
+		if n != len(request) {
+			return nil, errWriteBytes
 		}
 
 		// read
