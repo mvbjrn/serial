@@ -247,6 +247,33 @@ func (connection *Connection) Flush() error {
 	return errConnOpen
 }
 
+// Query combines Write(), Read() and Flush() to improve usability.
+func (connection *Connection) Query(request []byte, delimiter byte) ([]byte, error) {
+	if connection.isOpen {
+
+		// write
+		_, err := connection.Write(request)
+		if err != nil {
+			return nil, err
+		}
+
+		// read
+		response, err := connection.Read(delimiter)
+		if err != nil {
+			return nil, err
+		}
+
+		// flush
+		err = connection.Flush()
+		if err != nil {
+			return nil, err
+		}
+
+		return response, nil
+	}
+	return nil, errConnOpen
+}
+
 // Close a connection.
 func (connection *Connection) Close() error {
 	err := connection.f.Close()
