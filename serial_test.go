@@ -22,7 +22,8 @@ var (
 // functions
 
 func TestSave(t *testing.T) {
-	connection, err := InitConnection("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
+	connection, err := InitConnection("/dev/ttyUSB0", Baud115200,
+		DataBit8, StopBit1, ParityNone)
 	if err != nil {
 		t.Error(err)
 	}
@@ -41,7 +42,8 @@ func TestSave(t *testing.T) {
 }
 
 func TestLoad(t *testing.T) {
-	connection1, err := InitConnection("/dev/ttyUSB0", Baud115200, DataBit8, StopBit1, ParityNone)
+	connection1, err := InitConnection("/dev/ttyUSB0", Baud115200,
+		DataBit8, StopBit1, ParityNone)
 	if err != nil {
 		t.Error(err)
 	}

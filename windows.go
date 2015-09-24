@@ -92,7 +92,8 @@ func (connection *Connection) String() string {
 	}
 
 	return fmt.Sprintf("port: %s, baud rate:%d, parameters: %d%s%d",
-		connection.Port, connection.Baud, connection.DataBit, parity, connection.StopBit)
+		connection.Port, connection.Baud, connection.DataBit, parity,
+		connection.StopBit)
 }
 
 // Open a connection.
@@ -110,7 +111,8 @@ func (connection *Connection) Read(delimiter byte) ([]byte, error) {
 	//TODO
 }
 
-// Flush the connection, which causes untransmitted or not read data to be discarded.
+// Flush the connection, which causes untransmitted or not read
+// data to be discarded.
 func (connection *Connection) Flush() error {
 	//TODO
 }
@@ -123,7 +125,9 @@ func (connection *Connection) Close() error {
 // functions
 
 // createConnection is the entrence point for the Connection in windows.
-func createConnection(port string, baudrate Baud, databit DataBit, stopbit StopBit, parity Parity) (*Connection, error) {
-	connection := &Connection{Port: port, Baud: baudrate, DataBit: databit, StopBit: stopbit, Parity: parity}
+func createConnection(port string, baudrate Baud, databit DataBit,
+	stopbit StopBit, parity Parity) (*Connection, error) {
+	connection := &Connection{Port: port, Baud: baudrate,
+		DataBit: databit, StopBit: stopbit, Parity: parity}
 	return connection, connection.check()
 }

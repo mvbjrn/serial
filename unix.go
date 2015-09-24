@@ -111,7 +111,8 @@ func (connection *Connection) String() string {
 	}
 
 	return fmt.Sprintf("port: %s, baud rate:%d, parameters: %d%s%d",
-		connection.Port, connection.Baud, connection.DataBit, parity, connection.StopBit)
+		connection.Port, connection.Baud, connection.DataBit, parity,
+		connection.StopBit)
 }
 
 // Open a connection with a read timeout.
@@ -123,7 +124,8 @@ func (connection *Connection) Open(timeout uint8) error {
 	// 	O_RDWR allows the program to read and write the file.
 	// 	O_NOCTTY prevents the device from controlling the terminal.
 	// 	O_NONBLOCK prevents the system from blocking for a long time.
-	connection.f, err = os.OpenFile(connection.Port, syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 0666)
+	connection.f, err = os.OpenFile(connection.Port,
+		syscall.O_RDWR|syscall.O_NOCTTY|syscall.O_NONBLOCK, 0666)
 	if err != nil {
 		return err
 	}
@@ -135,7 +137,8 @@ func (connection *Connection) Open(timeout uint8) error {
 		}
 	}()
 
-	// Create a plain termios, which allows the program to execute input/output operations.
+	// Create a plain termios, which allows the program to execute
+	// input/output operations.
 	termios := syscall.Termios{}
 
 	// Setup the baud rate in the termios structure.
@@ -186,10 +189,14 @@ func (connection *Connection) Open(timeout uint8) error {
 
 	// Execute IOCTL with the modified termios structure to apply the changes.
 	if _, _, errno := syscall.Syscall6(
-		syscall.SYS_IOCTL,          // device-specific input/output operations
-		uintptr(connection.f.Fd()), // open file descriptor
-		uintptr(syscall.TCSETS),    // a request code number to set the current serial port settings
-		//TODO: it looks like syscall.TCSETS is not available under freebsd and darwin. Is this a bug?
+		// device-specific input/output operations
+		syscall.SYS_IOCTL,
+		// open file descriptor
+		uintptr(connection.f.Fd()),
+		// a request code number to set the current serial port settings
+		uintptr(syscall.TCSETS),
+		//TODO: it looks like syscall.TCSETS is not available under
+		// freebsd and darwin. Is this a bug?
 		uintptr(unsafe.Pointer(&termios)), // a pointer to the termios structure
 		0,
 		0,
@@ -221,7 +228,8 @@ func (connection *Connection) Read(delimiter byte) ([]byte, error) {
 	return nil, errConnOpen
 }
 
-// ReadToBuffer reads from an open connection into a []byte buffer with the given size.
+// ReadToBuffer reads from an open connection into a []byte buffer with
+// the given size.
 func (connection *Connection) ReadToBuffer(size int) ([]byte, error) {
 	buffer := make([]byte, size)
 	n, err := connection.f.Read(buffer)
@@ -232,14 +240,19 @@ func (connection *Connection) ReadToBuffer(size int) ([]byte, error) {
 	return buffer[:n], nil
 }
 
-// Flush the connection, which causes untransmitted or not read data to be discarded.
+// Flush the connection, which causes untransmitted or not read data
+// to be discarded.
 func (connection *Connection) Flush() error {
 	if connection.isOpen {
 		_, _, err := syscall.Syscall(
-			syscall.SYS_IOCTL,          // device-specific input/output operations
-			uintptr(connection.f.Fd()), // open file descriptor
-			uintptr(syscall.TCIOFLUSH), // a request code number to flush input/output
-			uintptr(0),                 // a pointer to data, not needed here
+			// device-specific input/output operations
+			syscall.SYS_IOCTL,
+			// open file descriptor
+			uintptr(connection.f.Fd()),
+			// a request code number to flush input/output
+			uintptr(syscall.TCIOFLUSH),
+			// a pointer to data, not needed here
+			uintptr(0),
 		)
 		return err
 	}
@@ -247,7 +260,8 @@ func (connection *Connection) Flush() error {
 }
 
 // Query combines Write(), Read() and Flush() to improve usability.
-func (connection *Connection) Query(request []byte, delimiter byte) ([]byte, error) {
+func (connection *Connection) Query(request []byte,
+	delimiter byte) ([]byte, error) {
 	if connection.isOpen {
 
 		// write
@@ -286,8 +300,11 @@ func (connection *Connection) Close() error {
 
 // functions
 
-// createConnection is the entrence point for the Connection in unix-like operating systems.
-func createConnection(port string, baudrate Baud, databit DataBit, stopbit StopBit, parity Parity) (*Connection, error) {
-	connection := &Connection{Port: port, Baud: baudrate, DataBit: databit, StopBit: stopbit, Parity: parity}
+// createConnection is the entrence point for the Connection in
+// unix-like operating systems.
+func createConnection(port string, baudrate Baud, databit DataBit,
+	stopbit StopBit, parity Parity) (*Connection, error) {
+	connection := &Connection{Port: port, Baud: baudrate,
+		DataBit: databit, StopBit: stopbit, Parity: parity}
 	return connection, connection.check()
 }
